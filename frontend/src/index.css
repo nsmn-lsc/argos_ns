@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-argus-bg: #0f172a;
+  --color-argus-card: #1e293b;
+  --color-argus-accent: #06b6d4;
+  --color-argus-ok: #10b981;
+  --color-argus-warn: #f59e0b;
+  --color-argus-crit: #ef4444;
+}
+
+body {
+  @apply bg-argus-bg text-slate-100 font-sans antialiased m-0 p-0;
+}
