@@ -23,7 +23,8 @@ function App() {
 
   useEffect(() => {
     // 1. WebSocket Metrics
-    const wsUrl = `ws://localhost:8000/ws/v1/metrics`;
+    
+    const wsUrl = "wss://argos-ops.filenode.dev/ws/v1/metrics";
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => setIsConnected(true);
@@ -39,7 +40,7 @@ function App() {
     };
 
     // 2. Cargar lista de proyectos
-    fetch("http://localhost:8000/api/v1/projects")
+    fetch("https://argos-ops.filenode.dev/api/v1/projects")
       .then(res => res.json())
       .then(data => {
         setProjects(data);
@@ -67,7 +68,7 @@ function App() {
     setFetchingGit(true);
     setGitStatus(null);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/git/status", {
+      const res = await fetch("https://argos-ops.filenode.dev/api/v1/git/status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ repo_path: project.repo_path })
@@ -95,7 +96,7 @@ function App() {
     const isDjango = activeProject.type === 'django';
 
     try {
-      const res = await fetch("http://localhost:8000/api/v1/deploy", {
+      const res = await fetch("https://argos-ops.filenode.dev/api/v1/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

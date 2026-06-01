@@ -136,12 +136,20 @@ PROJECTS_CONFIG = [
         "type": "fastapi"
     },
     {
-        "id": "django-demo",
-        "name": "Sitio Web Django (Demo)",
-        "service_name": "django-demo-web",
-        "repo_path": "/var/home/najera/Projects/django_demo",
+        "id": "healtics-production",
+        "name": "SIGAM / Healtics (Producción)",
+        "service_name": "healtics",              # Nombre exacto que nos dio systemctl
+        "repo_path": "/opt/apps/healtics",       # Asegúrate de que esta sea la ruta de tu repo de prod
+        "type": "django"
+    },
+    {
+        "id": "healtics-staging-env",
+        "name": "SIGAM / Healtics (Staging)",
+        "service_name": "healtics-staging",      # El entorno de pruebas que descubrimos
+        "repo_path": "/opt/apps/healtics_staging", # Modifica esta ruta si tu carpeta de staging se llama diferente
         "type": "django"
     }
+
 ]
 
 # Lista de servicios permitidos (Whitelist dinámica)
