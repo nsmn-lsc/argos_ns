@@ -3,6 +3,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 import psutil
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="ArgusOps API - Desarrollo")
 
@@ -38,7 +39,7 @@ html_cliente_prueba = """
 
         <script>
             // Conectamos al WebSocket usando la URL de nuestra API
-            const ws = new WebSocket("ws://localhost:8000/ws/v1/metrics");
+            const ws = new WebSocket("wss://argos.filenode.dev/ws/v1/metrics");
             
             // Cada vez que el backend de FastAPI mande un payload JSON, actualizamos el DOM
             ws.onmessage = function(event) {
@@ -55,8 +56,8 @@ html_cliente_prueba = """
 </html>
 """
 
-# 2. Reemplazamos la ruta raíz para que devuelva el HTML de prueba
-@app.get("/")
+# 2. Reemplazamos la ruta raíz para que devuelva el HTML de prueba en /test
+@app.get("/test")
 async def get_test_page():
     return HTMLResponse(html_cliente_prueba)
 
@@ -346,7 +347,7 @@ async def deploy_application(request: DeployRequest):
     if resultado_restart["status"] == "error":
         log.append({"step": "restart_service", "status": "error", "output": resultado_restart.get("output", "Error al reiniciar")})
         return {"status": "failed", "logs": log}
-    else:
-        log.append({"step": "restart_service", "status": "success", "output": resultado_restart.get("output", "Servicio reiniciado con éxito")})
-        
     return {"status": "success", "logs": log}
+
+# Montamos el frontend compilado en la raíz para que sea la interfaz principal
+app.mount("/", StaticFiles(directory="/var/home/najera/Projects/argos/frontend/dist", html=True), name="frontend")
