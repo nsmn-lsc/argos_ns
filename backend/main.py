@@ -297,13 +297,25 @@ async def deploy_application(request: DeployRequest):
             return False
 
     # 1. Git Pull
+    # 1. Git Pull
     try:
         repo = git.Repo(repo_path)
-        origin = repo.remotes.origin
+        
+        # CORRECCIÓN: Validamos si existen remotos configurados
+        if not repo.remotes:
+            log.append({"step": "git_pull", "status": "error", "output": "El repositorio no tiene ningún remoto configurado (origin)."})
+            return {"status": "failed", "logs": log}
+            
+        # Accedemos de forma segura al remoto 'origin'
+        origin = repo.remotes['origin'] # <--- Cambio clave aquí
+        
         pull_info = origin.pull()
-        log.append({"step": "git_pull", "status": "success", "output": "Repositorio actualizado (Pull completado)"})
+        log.append({"step": "git_pull", "status": "success", "output": "Repositorio actualizado (Pull completado con éxito)"})
+    except KeyError:
+        log.append({"step": "git_pull", "status": "error", "output": "No se encontró un remoto llamado 'origin' en este repositorio."})
+        return {"status": "failed", "logs": log}
     except Exception as e:
-        log.append({"step": "git_pull", "status": "error", "output": str(e)})
+        log.append({"step": "git_pull", "status": "error", "output": f"Error durante git pull: {str(e)}"})
         return {"status": "failed", "logs": log}
 
     # 2. Instalar dependencias
